@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the number game</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
+            text-align: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #4a6fa5;
+        }
+        
+        .instructions {
+            background-color: #e6f7ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        input {
+            padding: 12px;
+            font-size: 18px;
+            width: 150px;
+            text-align: center;
+            border: 2px solid #4a6fa5;
+            border-radius: 5px;
+            margin: 10px;
+        }
+        
+        button {
+            background-color: #4a6fa5;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #3a5a80;
+        }
+        
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            min-height: 30px;
+        }
+        
+        .attempts {
+            margin-top: 15px;
+            font-size: 16px;
+        }
+        
+        .success {
+            color: #2e8b57;
+        }
+        
+        .error {
+            color: #dc143c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Guess the number game</h1>
+        
+        <div class="instructions">
+            <p>I have chosen a random number between 1 and 100. Can you guess it ?</p>
+        </div>
+        
+        <div>
+            <input type="number" id="guessInput" min="1" max="100" placeholder="Enter a number">
+            <button onclick="checkGuess()">Guess!</button>
+        </div>
+        
+        <div class="message" id="message"></div>
+        <div class="attempts" id="attempts">Number of attempts: 0</div>
+        
+        <button onclick="resetGame()" style="margin-top: 20px;">Play again</button>
+    </div>
+
+    <script>
+        // المتغيرات العامة
+        let randomNumber;
+        let attempts;
+        
+        // بدء اللعبة لأول مرة
+        window.onload = startGame;
+        
+        function startGame() {
+            randomNumber = Math.floor(Math.random() * 100) + 1;
+            attempts = 0;
+            updateAttempts();
+            document.getElementById("message").textContent = "";
+            document.getElementById("guessInput").value = "";
+        }
+        
+        function checkGuess() {
+            const guessInput = document.getElementById("guessInput");
+            const message = document.getElementById("message");
+            const guess = parseInt(guessInput.value);
+            
+            // التحقق من صحة المدخلات
+            if (isNaN(guess) || guess < 1 || guess > 100) {
+                message.textContent = "Please enter a number between 1 and 100";
+                message.className = "message error";
+                return;
+            }
+            
+            attempts++;
+            updateAttempts();
+            
+            // التحقق من التخمين
+            if (guess === randomNumber) {
+                message.textContent = `Congratulations! You have guessed the correct number. (${randomNumber}) in ${attempts} attempt`;
+                message.className = "message success";
+            } else if (guess < randomNumber) {
+                message.textContent = "The number you guessed is less than the correct number.";
+                message.className = "message error";
+            } else {
+                message.textContent = "The number you guess is higher than the correct number.";
+                message.className = "message error";
+            }
+            
+            // مسح حقل الإدخال والتركيز عليه
+            guessInput.value = "";
+            guessInput.focus();
+        }
+        
+        function updateAttempts() {
+            document.getElementById("attempts").textContent = `Number of attempts: ${attempts}`;
+        }
+        
+        function resetGame() {
+            startGame();
+        }
+    </script>
+</body>
+</html>
